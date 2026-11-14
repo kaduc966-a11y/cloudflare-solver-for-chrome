@@ -1,20 +1,21 @@
 # cloudflare-solver-for-chrome
 
 Cloudflare **Turnstile** solver tuned for a **Chrome desktop** fingerprint. It mints a
-server-accepted token with **no real browser and no headless Chrome**. On the current Cloudflare
-build it is served the *interaction* program (checkbox + proof worker); the solver completes that
-step in-process and receives the token at **POST #3**.
+server-accepted token with **no real browser and no headless Chrome**. The server picks the program
+variant from client trust: the *complete* program returns the token at **POST #2**; the *interaction*
+program (checkbox + proof worker) is completed in-process and returns the token at **POST #3**. The
+solver handles both.
 
 ```
 POST #1  (48-field environment payload)  ->  server VM program
-POST #2  (probe records)                 ->  interaction required (checkbox + proof worker)
-POST #3  (interaction proof)             ->  complete: token
+POST #2  (probe records)                 ->  complete: token  OR  interaction required
+POST #3  (interaction proof, if needed)  ->  complete: token
 ```
 
-The Chrome desktop profile recovers all **39 probes** and completes the *interaction* program
-in-process, so the token comes back at **POST #3** — verified end-to-end (`siteverify` 200, ~16 s).
-The token is minted by Cloudflare, single-use (~300 s), bound to sitekey + hostname, and validated
-at `siteverify`. Nothing here forges or replays a token.
+The Chrome desktop profile recovers all **39 probes** and completes whichever program the server
+serves — verified end-to-end both ways (`siteverify` 200, ~16-20 s). The token is minted by
+Cloudflare, single-use (~300 s), bound to sitekey + hostname, and validated at `siteverify`.
+Nothing here forges or replays a token.
 
 ## Attribution
 
