@@ -1,18 +1,20 @@
 # cloudflare-solver-for-chrome
 
 Cloudflare **Turnstile** solver tuned for a **Chrome desktop** fingerprint. It mints a
-server-accepted token through the **2-post "complete" flow** — no real browser, no headless Chrome,
-no interaction step on the success path.
+server-accepted token with **no real browser and no headless Chrome**. On the current Cloudflare
+build it is served the *interaction* program (checkbox + proof worker); the solver completes that
+step in-process and receives the token at **POST #3**.
 
 ```
 POST #1  (48-field environment payload)  ->  server VM program
-POST #2  (probe records)                 ->  complete: token
+POST #2  (probe records)                 ->  interaction required (checkbox + proof worker)
+POST #3  (interaction proof)             ->  complete: token
 ```
 
-A trusted Chrome desktop profile is served the *complete* program, so the token comes back at
-POST #2. (Less-trusted clients get an *interaction* program that needs a 3rd POST.) The token is
-minted by Cloudflare, single-use (~300 s), bound to sitekey + hostname, and validated at `siteverify`.
-Nothing here forges or replays a token.
+The Chrome desktop profile recovers all **39 probes** and completes the *interaction* program
+in-process, so the token comes back at **POST #3** — verified end-to-end (`siteverify` 200, ~16 s).
+The token is minted by Cloudflare, single-use (~300 s), bound to sitekey + hostname, and validated
+at `siteverify`. Nothing here forges or replays a token.
 
 ## Attribution
 
@@ -25,8 +27,9 @@ Based on **[cfsolve](https://github.com/chris124567/cfsolve)** by Christopher Ta
 What this repo adds on top:
 
 - **A capture-matched Chrome desktop profile** — `profiles/chromium.json` +
-  `profiles/chromium/answers.json`, built offline from a real Chrome capture. It presents a trusted
-  Chrome desktop fingerprint so Cloudflare serves the 2-post *complete* program (token at POST #2).
+  `profiles/chromium/answers.json`, built offline from a real Chrome 157 desktop capture. It presents
+  a Chrome desktop fingerprint that recovers all 39 probes and completes the interaction program
+  in-process (token at POST #3, `siteverify` 200).
 - A one-line compile fix in `src/stage2/benchmark.rs` (the `deobfuscate` module path).
 
 ## Requirements
