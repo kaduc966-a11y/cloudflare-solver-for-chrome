@@ -94,17 +94,6 @@ cargo run --release --example fill_profile   -- profiles/chromium.json <capture-
 `<capture-dir>` is a `capture-proxy --out` root (`traffic.json` + `sessions/`). PAT is Computed, so it
 is never stored in answers — the solver replays it from the program bytecode at solve time.
 
-## Documentation
-
-- [docs/chrome-fix.md](docs/chrome-fix.md) — the new-build fix: `encoded_strings` extraction, PAT
-  replay (`decoded_after`), digest coupling, offline profile build, file map, limits.
-- [docs/internals.md](docs/internals.md) — stage2 architecture: Computed vs Replayed, the 39-probe
-  registry, record dispatch, vocabulary, recognizer traps, profile tools.
-- [docs/workflow.md](docs/workflow.md) — capture → profile → verify workflow and POST#2 / 600010
-  diagnosis.
-- [scripts/build-chrome-profile.sh](scripts/build-chrome-profile.sh) — offline `build_profile` +
-  `fill_profile` + answers repoint.
-
 ## Layout
 
 ```
