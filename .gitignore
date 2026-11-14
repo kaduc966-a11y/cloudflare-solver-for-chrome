@@ -1,0 +1,28 @@
+# Build artifacts
+/target
+
+# Secrets / environment
+.env
+*.pem
+*.key
+
+# capture-proxy CA (private key) and recorded sessions — never commit
+/proxy-ca/
+/captures/
+captures*/
+traffic.json
+capture.json
+*.post
+
+# Solver session output dirs (hold requests/responses and tokens)
+/out/
+/out-*/
+/session*/
+solve-session*/
+token.txt
+*.token
+
+# Logs / caches
+*.log
+__pycache__/
+*.pyc
