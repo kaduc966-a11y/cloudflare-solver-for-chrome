@@ -115,3 +115,4 @@ automates a Chrome fingerprint, it does not bypass `siteverify` or forge tokens.
 ## License
 
 MIT — see [LICENSE](LICENSE). Upstream cfsolve Copyright (c) 2026 Christopher Tarry.
+Sửa bởi sagiri7284 [XDBG].
